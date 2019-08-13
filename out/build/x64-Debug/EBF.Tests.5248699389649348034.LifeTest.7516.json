@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "LifeTest",
+    "Command": "D:/Coding/conway/out/build/x64-Debug/tests/life_test.exe",
+    "Arguments": [],
+    "WorkingDirectory": "D:/Coding/conway/out/build/x64-Debug/tests",
+    "ProjectFile": "D:/Coding/conway/tests/CMakeLists.txt",
+    "LineNumber": 4,
+    "Environment": {},
+    "ExpectsFailure": false,
+    "PassRegularExpression": null,
+    "FailRegularExpression": null,
+    "TargetName": "life_test.exe (tests\\life_test.exe)",
+    "TimeoutInMs": -1
+  }
+]
