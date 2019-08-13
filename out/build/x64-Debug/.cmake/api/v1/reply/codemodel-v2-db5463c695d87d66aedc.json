@@ -8,7 +8,8 @@
 					"build" : ".",
 					"childIndexes" : 
 					[
-						1
+						1,
+						2
 					],
 					"minimumCMakeVersion" : 
 					{
@@ -30,6 +31,20 @@
 					[
 						0
 					]
+				},
+				{
+					"build" : "tests",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tests",
+					"targetIndexes" : 
+					[
+						1
+					]
 				}
 			],
 			"name" : "Debug",
@@ -39,12 +54,14 @@
 					"directoryIndexes" : 
 					[
 						0,
-						1
+						1,
+						2
 					],
 					"name" : "Conway",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -52,9 +69,16 @@
 			[
 				{
 					"directoryIndex" : 1,
-					"id" : "main::@145eef247bfb46b6828c",
-					"jsonFile" : "target-main-Debug-5bd6500f6354eaf41fa4.json",
-					"name" : "main",
+					"id" : "life::@145eef247bfb46b6828c",
+					"jsonFile" : "target-life-Debug-3a6b07af10e9c5b2f8df.json",
+					"name" : "life",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "life_test::@a44f0ac069e85531cdee",
+					"jsonFile" : "target-life_test-Debug-3dc1b049abcc684c07fe.json",
+					"name" : "life_test",
 					"projectIndex" : 0
 				}
 			]

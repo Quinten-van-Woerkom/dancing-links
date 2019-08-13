@@ -11,7 +11,7 @@
 				}
 			],
 			"type" : "STRING",
-			"value" : "Debug"
+			"value" : "Release"
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
@@ -23,7 +23,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "d:/Coding/conway/out/build/x64-Debug"
+			"value" : "d:/Coding/conway/out/build/x64-Release"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -411,7 +411,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "D:/Coding/conway/out/install/x64-Debug"
+			"value" : "D:/Coding/conway/out/install/x64-Release"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -547,7 +547,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "2"
+			"value" : "3"
 		},
 		{
 			"name" : "CMAKE_PLATFORM_INFO_INITIALIZED",
@@ -995,7 +995,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Coding/conway/out/build/x64-Debug"
+			"value" : "D:/Coding/conway/out/build/x64-Release"
 		},
 		{
 			"name" : "Conway_SOURCE_DIR",
