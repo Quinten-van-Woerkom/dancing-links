@@ -10,13 +10,4 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif()
 
-if (MSVC)
-	add_compile_options(/W4)
-else()
-	add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
-
-enable_testing()
-
 add_subdirectory(src)
-add_subdirectory(tests)

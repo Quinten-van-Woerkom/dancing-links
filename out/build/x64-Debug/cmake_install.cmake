@@ -35,7 +35,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("D:/Coding/conway/out/build/x64-Debug/src/cmake_install.cmake")
-  include("D:/Coding/conway/out/build/x64-Debug/tests/cmake_install.cmake")
 
 endif()
 

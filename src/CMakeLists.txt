@@ -1,3 +1,3 @@
-add_executable(life life.cpp ${HEADER_LIST})
-target_include_directories(life PUBLIC ../include)
-target_compile_features(life PUBLIC cxx_std_17)
+add_executable(main life.cpp ${HEADER_LIST})
+target_include_directories(main PUBLIC ../include)
+target_compile_features(main PUBLIC cxx_std_17)
