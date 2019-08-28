@@ -1,4 +1,4 @@
-//===-- universe.h - Universe class definition ------------------*- C++ -*-===//
+//===-- cell.cpp - Macrocell class definition -------------------*- C++ -*-===//
 //
 // Hashlife
 // Copyright(C) 2019 Quinten van Woerkom
@@ -20,17 +20,12 @@
 //===----------------------------------------------------------------------===//
 ///
 /// \file
-/// Implementation of the universe type controlling evaluation of generations.
+/// Implementation of the macrocell type representing squares of cells of
+/// arbitrary size.
 ///
 //===----------------------------------------------------------------------===//
 
-#include <unordered_map>
+#include "cell.h"
 
 namespace life {
-/// Contains all cells and controls evaluation of next generations.
-class universe {
-public:
-private:
-
-};
-}
+} // namespace life

@@ -1,4 +1,4 @@
-//===-- hashtable.h - hashtable class definition ----------------*- C++ -*-===//
+//===-- hashtable.h - Macrocell class definition ----------------*- C++ -*-===//
 //
 // Hashlife
 // Copyright(C) 2019 Quinten van Woerkom
@@ -20,30 +20,54 @@
 //===----------------------------------------------------------------------===//
 ///
 /// \file
-/// Implementation of the hashtable utilised in canonisation of nodes.
+/// Implementation of a hashtable used to support memoization of macrocells.
 ///
 //===----------------------------------------------------------------------===//
 
-#include <unordered_set>
+#pragma once
+
+#include <unordered_map>
+#include <iostream>
 
 namespace life {
-class macrocell;
-
-template<typename T> constexpr auto hash(T *nw, T *ne, T *sw, T *se) noexcept {
-  return 0x10001ull * reinterpret_cast<std::uint64_t>(nw) +
-         0x1001ull * reinterpret_cast<std::uint64_t>(ne) +
-         0x101ull * reinterpret_cast<std::uint64_t>(sw) +
-         0x11ull * reinterpret_cast<std::uint64_t>(se);
-};
-
-/// Hashtable is accessed only through use of four pointers to cell squares.
-class hash_table {
-public:
-    template<typename T> auto find(T* nw, T* ne, T* sw, T* se) {
-    return squares.emplace(nw, ne, sw, se);
+/// Hash function for any set of arguments.
+/// Requires that the arguments be convertible to std::size_t
+template <typename... Args> auto hash(Args &&... args) noexcept -> std::size_t {
+  if constexpr (sizeof...(args) == 0) return 0;
+  else {
+    return hash_impl(args...);
   }
+}
+
+namespace {
+template <typename Arg, typename... Args>
+constexpr auto hash_impl(Arg&& arg, Args&& ... args) noexcept -> std::size_t {
+  constexpr auto scalar = (1 << (sizeof...(args) + 1)) + 1;
+  return scalar * arg + hash_impl(args...);
+}
+
+constexpr auto hash_impl() noexcept -> std::size_t { 
+    return 0;
+}
+}
+
+/// Allows memoization of objects whose construction is costly.
+/// Constructor arguments are hashed to determine whether or not the
+/// corresponding element is already present. Only if this is not the case,
+/// the new element is constructed.
+template <typename Element> class hashtable {
+public:
+  /// If not yet present, constructs and emplaces an element.
+  /// Returns a reference to the inserted element, or if already present, to
+  /// the already contained equivalent element.
+  template <typename... Args> auto emplace(Args &&... args) {
+    auto key = hash(args...);
+    auto result = elements.try_emplace(key, args...);
+    return *result.first;
+  };
 
 private:
-  std::unordered_set<macrocell, hash<macrocell>> squares;
+  using key_type = std::size_t;
+  std::unordered_map<key_type, Element> elements;
 };
 } // namespace life
