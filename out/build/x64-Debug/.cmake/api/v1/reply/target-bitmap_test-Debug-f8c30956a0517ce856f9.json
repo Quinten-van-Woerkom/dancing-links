@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "tests/life_test.exe"
+			"path" : "tests/bitmap_test.exe"
 		},
 		{
-			"path" : "tests/life_test.pdb"
+			"path" : "tests/bitmap_test.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -36,6 +36,12 @@
 				"file" : 0,
 				"line" : 2,
 				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 0
 			}
 		]
 	},
@@ -53,6 +59,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Coding/conway/tests/../include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "D:/Coding/conway/tests/../extern"
 				}
 			],
 			"language" : "CXX",
@@ -62,7 +72,7 @@
 			]
 		}
 	],
-	"id" : "life_test::@a44f0ac069e85531cdee",
+	"id" : "bitmap_test::@a44f0ac069e85531cdee",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -82,8 +92,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "life_test",
-	"nameOnDisk" : "life_test.exe",
+	"name" : "bitmap_test",
+	"nameOnDisk" : "bitmap_test.exe",
 	"paths" : 
 	{
 		"build" : "tests",
@@ -104,7 +114,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "tests/life_test.cpp",
+			"path" : "tests/bitmap_test.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

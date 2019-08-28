@@ -36,6 +36,12 @@
 				"file" : 0,
 				"line" : 2,
 				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 0
 			}
 		]
 	},
@@ -53,6 +59,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Coding/conway/src/../include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "D:/Coding/conway/src/../extern"
 				}
 			],
 			"language" : "CXX",

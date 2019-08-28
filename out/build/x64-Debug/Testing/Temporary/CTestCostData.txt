@@ -1,2 +1,2 @@
-LifeTest 12 0.00290808
+BitmapTest 3 0.0303379
 ---

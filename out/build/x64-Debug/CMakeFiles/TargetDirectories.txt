@@ -5,7 +5,7 @@ D:/Coding/conway/out/build/x64-Debug/src/CMakeFiles/life.dir
 D:/Coding/conway/out/build/x64-Debug/src/CMakeFiles/rebuild_cache.dir
 D:/Coding/conway/out/build/x64-Debug/src/CMakeFiles/test.dir
 D:/Coding/conway/out/build/x64-Debug/src/CMakeFiles/edit_cache.dir
-D:/Coding/conway/out/build/x64-Debug/tests/CMakeFiles/life_test.dir
+D:/Coding/conway/out/build/x64-Debug/tests/CMakeFiles/bitmap_test.dir
 D:/Coding/conway/out/build/x64-Debug/tests/CMakeFiles/rebuild_cache.dir
 D:/Coding/conway/out/build/x64-Debug/tests/CMakeFiles/test.dir
 D:/Coding/conway/out/build/x64-Debug/tests/CMakeFiles/edit_cache.dir

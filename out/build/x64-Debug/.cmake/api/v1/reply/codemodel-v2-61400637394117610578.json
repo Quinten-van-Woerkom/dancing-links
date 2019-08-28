@@ -29,7 +29,7 @@
 					"source" : "src",
 					"targetIndexes" : 
 					[
-						0
+						1
 					]
 				},
 				{
@@ -43,7 +43,7 @@
 					"source" : "tests",
 					"targetIndexes" : 
 					[
-						1
+						0
 					]
 				}
 			],
@@ -68,17 +68,17 @@
 			"targets" : 
 			[
 				{
-					"directoryIndex" : 1,
-					"id" : "life::@145eef247bfb46b6828c",
-					"jsonFile" : "target-life-Debug-3a6b07af10e9c5b2f8df.json",
-					"name" : "life",
+					"directoryIndex" : 2,
+					"id" : "bitmap_test::@a44f0ac069e85531cdee",
+					"jsonFile" : "target-bitmap_test-Debug-f8c30956a0517ce856f9.json",
+					"name" : "bitmap_test",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 2,
-					"id" : "life_test::@a44f0ac069e85531cdee",
-					"jsonFile" : "target-life_test-Debug-3dc1b049abcc684c07fe.json",
-					"name" : "life_test",
+					"directoryIndex" : 1,
+					"id" : "life::@145eef247bfb46b6828c",
+					"jsonFile" : "target-life-Debug-2b650d3457be33b737a7.json",
+					"name" : "life",
 					"projectIndex" : 0
 				}
 			]
