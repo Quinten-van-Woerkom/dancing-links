@@ -40,7 +40,7 @@ class leaf;
 /// The universe is stored in terms of squares with edges multiples of 2 in
 /// size. Their state is stored in the form of references to smaller,
 /// canonicalized squares, as a quadtree.
-/// Only the state of 8x8 squares is stored explicitly as a bitmap.
+/// Only the state of 8x8 squares is stored explicitly as a bitmap<8>.
 class macrocell {
 public:
   /// Factory function that canonicalizes all macrocells.
@@ -130,14 +130,15 @@ private:
 /// Futures are calculated directly.
 class leaf {
 public:
+  using cells = bitmap<8>;
+
   /// Returns the leaf's discriminator value and depth in the quadtree.
   auto level() const -> std::size_t { return this->depth; };
 
   /// Construction is best done through factory functions, as that allows for
   /// memoization.
   /// @{
-  static auto create(bitmap nw, bitmap ne, bitmap sw, bitmap se)
-      -> const leaf &;
+  static auto create(cells nw, cells ne, cells sw, cells se) -> const leaf &;
   /// @}
 
   /// Constructors immediately populate the next and future fields.
@@ -146,7 +147,7 @@ public:
   /// Constructors must be public to support hashtable usage.
   /// @{
   leaf(leaf *nw, leaf *ne, leaf *sw, leaf *se);
-  leaf(bitmap nw, bitmap ne, bitmap sw, bitmap se){};
+  leaf(cells nw, cells ne, cells sw, cells se){};
   /// @}
 
 private:
@@ -155,8 +156,8 @@ private:
   static hashtable<leaf> leaves;
 
   const std::size_t depth = 4;
-  bitmap nw, ne, sw, se;
-  bitmap next;
-  bitmap future;
+  cells nw, ne, sw, se;
+  cells next;
+  cells future;
 };
 } // namespace life

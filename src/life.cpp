@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "bitmap.h"
 #include "macrocell.h"
 
 using namespace life;

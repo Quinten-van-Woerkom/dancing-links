@@ -32,10 +32,10 @@
 
 #include <cstdint>
 
+#include "bitmap.h"
+
 namespace life {
 //===-- Future of 8x8 cell bitmap -----------------------------------------===//
-using bitmap = std::uint64_t;
-
 /// Returns the bit located at a given index.
 template <typename Unsigned>
 constexpr auto bit(Unsigned value, std::size_t index) noexcept -> bool {
@@ -62,7 +62,8 @@ constexpr auto full_adder(Unsigned a, Unsigned b, Unsigned c) noexcept {
 }
 
 /// Returns the next generation of a bitmap of cells.
-constexpr auto next(bitmap cells) noexcept -> bitmap {
+template<int size>
+constexpr auto next(bitmap<size> cells) noexcept -> bitmap<size> {
   const auto left = cells << 1;
   const auto right = cells >> 1;
   const auto [mid1, mid2] = full_adder(left, cells, right);
@@ -78,12 +79,13 @@ constexpr auto next(bitmap cells) noexcept -> bitmap {
   const auto sum4 = sum4a ^ sum4b;
 
   const auto result = cells & (~sum1 & ~sum2 & sum4) | (sum1 & sum2 & ~sum4);
-  return bitmap{result & 0x007e7e7e7e7e7e00};
+  return bitmap<size - 2>{result};
 }
 
 /// Returns the generation 2 steps into the future of a bitmap.
-constexpr auto future(bitmap cells) noexcept -> bitmap {
-  return next(next(cells)) & 0x00003c3c3c3c0000;
+template<int size>
+constexpr auto future(bitmap<size> cells) noexcept -> bitmap<size - 4> {
+  return next(next(cells));
 }
 
 //===-- Future generations ------------------------------------------------===//
