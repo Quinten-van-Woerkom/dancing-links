@@ -1,4 +1,4 @@
-//===-- cell.h - Macrocell class definition ---------------------*- C++ -*-===//
+//===-- macrocell.h - Macrocell class definition ----------------*- C++ -*-===//
 //
 // Hashlife
 // Copyright(C) 2019 Quinten van Woerkom
@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "hashtable.h"
+#include "rules.h"
 
 namespace life {
 class node;
@@ -88,6 +89,7 @@ private:
   };
 };
 
+
 /// Nodes store their states as pointers to other nodes.
 /// Empty squares of any size are stored as null pointers, since their future
 /// is always empty anyway.
@@ -113,7 +115,8 @@ public:
   /// @}
 
 private:
-  /// All nodes are memoized upon construction to allow caching of futures.
+  /// All nodes are memoized when constructed using create(), to allow caching
+  /// of futures.
   static hashtable<node> nodes;
 
   std::size_t depth;
@@ -121,6 +124,7 @@ private:
   macrocell next;
   macrocell future;
 };
+
 
 /// Leaf macrocells directly store their cell states.
 /// Futures are calculated directly.
@@ -132,9 +136,8 @@ public:
   /// Construction is best done through factory functions, as that allows for
   /// memoization.
   /// @{
-  static auto create(leaf *nw, leaf *ne, leaf *sw, leaf *se) -> const leaf &;
-  static auto create(std::uint64_t nw, std::uint64_t ne, std::uint64_t sw,
-                     std::uint64_t se) -> const leaf &;
+  static auto create(bitmap nw, bitmap ne, bitmap sw, bitmap se)
+      -> const leaf &;
   /// @}
 
   /// Constructors immediately populate the next and future fields.
@@ -143,17 +146,17 @@ public:
   /// Constructors must be public to support hashtable usage.
   /// @{
   leaf(leaf *nw, leaf *ne, leaf *sw, leaf *se);
-  leaf(std::uint64_t nw, std::uint64_t ne, std::uint64_t sw,
-       std::uint64_t se){};
+  leaf(bitmap nw, bitmap ne, bitmap sw, bitmap se){};
   /// @}
 
 private:
-  /// All leaves are memoized upon construction to allow caching of futures.
+  /// All leaves are memoized when constructed using create(), to allow caching
+  /// of futures.
   static hashtable<leaf> leaves;
 
   const std::size_t depth = 4;
-  std::uint64_t nw, ne, sw, se;
-  std::uint64_t next;
-  std::uint64_t future;
+  bitmap nw, ne, sw, se;
+  bitmap next;
+  bitmap future;
 };
 } // namespace life

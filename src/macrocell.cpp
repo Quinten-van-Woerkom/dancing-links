@@ -1,4 +1,4 @@
-//===-- cell.cpp - Macrocell class definition -------------------*- C++ -*-===//
+//===-- macrocell.cpp - Macrocell class definition --------------*- C++ -*-===//
 //
 // Hashlife
 // Copyright(C) 2019 Quinten van Woerkom
@@ -25,7 +25,7 @@
 ///
 //===----------------------------------------------------------------------===//
 
-#include "cell.h"
+#include "macrocell.h"
 
 namespace life {
 } // namespace life

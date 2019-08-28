@@ -1,6 +1,6 @@
 SET(SOURCE_LIST
 	life.cpp
-	cell.cpp
+	macrocell.cpp
 )
 
 add_executable(life ${SOURCE_LIST} ${HEADER_LIST})

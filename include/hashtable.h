@@ -27,7 +27,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <iostream>
 
 namespace life {
 /// Hash function for any set of arguments.

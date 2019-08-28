@@ -78,7 +78,7 @@ build src\CMakeFiles\life.dir\life.cpp.obj: CXX_COMPILER__life ..\..\..\src\life
   OBJECT_FILE_DIR = src\CMakeFiles\life.dir
   TARGET_COMPILE_PDB = src\CMakeFiles\life.dir\
   TARGET_PDB = src\life.pdb
-build src\CMakeFiles\life.dir\cell.cpp.obj: CXX_COMPILER__life ..\..\..\src\cell.cpp || cmake_object_order_depends_target_life
+build src\CMakeFiles\life.dir\macrocell.cpp.obj: CXX_COMPILER__life ..\..\..\src\macrocell.cpp || cmake_object_order_depends_target_life
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /ZI /Ob0 /Od /RTC1 /JMC   /W4 -std:c++17
   INCLUDES = -I..\..\..\src\..\include -I..\..\..\src\..\extern
   OBJECT_DIR = src\CMakeFiles\life.dir
@@ -93,7 +93,7 @@ build src\CMakeFiles\life.dir\cell.cpp.obj: CXX_COMPILER__life ..\..\..\src\cell
 #############################################
 # Link the executable src\life.exe
 
-build src\life.exe: CXX_EXECUTABLE_LINKER__life src\CMakeFiles\life.dir\life.cpp.obj src\CMakeFiles\life.dir\cell.cpp.obj
+build src\life.exe: CXX_EXECUTABLE_LINKER__life src\CMakeFiles\life.dir\life.cpp.obj src\CMakeFiles\life.dir\macrocell.cpp.obj
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /ZI /Ob0 /Od /RTC1 /JMC
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

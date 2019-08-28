@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "cell.h"
+#include "macrocell.h"
 
 using namespace life;
 
