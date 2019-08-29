@@ -1,6 +1,6 @@
-//===-- sudoku_test.h - Life rules test -------------------------*- C++ -*-===//
+//===-- sudoku_test.cpp - Life rules test -----------------------*- C++ -*-===//
 //
-// Hashlife
+// Constraint-propagating sudoku solver.
 // Copyright(C) 2019 Quinten van Woerkom
 //
 // This program is free software; you can redistribute it and / or

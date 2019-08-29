@@ -1,5 +1,5 @@
 add_executable(sudoku_test sudoku_test.cpp ${HEADER_LIST})
 target_include_directories(sudoku_test PUBLIC ../include)
 target_include_directories(sudoku_test PUBLIC ../extern)
-target_compile_features(sudoku_test PUBLIC cxx_std_17)
+target_compile_features(sudoku_test PUBLIC cxx_std_20)
 add_test(SudokuTest sudoku_test)

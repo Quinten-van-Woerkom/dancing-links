@@ -1,6 +1,6 @@
 //===-- sudoku.cpp - Life rules test ----------------------------*- C++ -*-===//
 //
-// Hashlife
+// Constraint-propagating sudoku solver.
 // Copyright(C) 2019 Quinten van Woerkom
 //
 // This program is free software; you can redistribute it and / or
@@ -28,12 +28,12 @@
 #include <iostream>
 
 #include "sudoku.h"
+#include "dancing_links.h"
 
-using namespace sudoku;
+using namespace sudo;
 
 int main() {
-  cell cell{};
-  cell.prune(1, 2, 3, 5, 6, 7, 8, 9);
-  std::cout << cell.solution() << '\n' << cell.count() << '\n';
+  node test;
+
   std::cout << "Hello, world!\n";
 }

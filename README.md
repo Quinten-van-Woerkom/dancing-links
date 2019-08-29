@@ -1,2 +1,2 @@
-# conway
-C++ Hashlife implementation of Conway's Game of Life
+# sudoku
+C++ implementation of a constraint-propagating sudoku solver.
