@@ -1,9 +1,8 @@
 SET(SOURCE_LIST
-	life.cpp
-	macrocell.cpp
+	sudoku.cpp
 )
 
-add_executable(life ${SOURCE_LIST} ${HEADER_LIST})
-target_include_directories(life PUBLIC ../include)
-target_include_directories(life PUBLIC ../extern)
-target_compile_features(life PUBLIC cxx_std_17)
+add_executable(sudoku ${SOURCE_LIST} ${HEADER_LIST})
+target_include_directories(sudoku PUBLIC ../include)
+target_include_directories(sudoku PUBLIC ../extern)
+target_compile_features(sudoku PUBLIC cxx_std_17)

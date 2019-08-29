@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(Conway
+project(Sudoku
 	VERSION 0.1
-	DESCRIPTION "C++ Hashlife implementation of Conway's Game of Life"
+	DESCRIPTION "C++ sudoku solver"
 	LANGUAGES CXX)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

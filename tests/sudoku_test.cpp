@@ -33,7 +33,7 @@
 
 using namespace life;
 
-constexpr auto empty = square{R"(
+constexpr auto empty = square<8>{R"(
 		00000000
 		00000000
 		00000000
@@ -44,7 +44,7 @@ constexpr auto empty = square{R"(
 		00000000
 	)"};
 
-constexpr auto blinker = square{R"(
+constexpr auto blinker = square<8>{R"(
 		00000000
 		00000000
 		00000000
@@ -55,7 +55,7 @@ constexpr auto blinker = square{R"(
 		00000000
 	)"};
 
-constexpr auto glider = square{R"(
+constexpr auto glider = square<8>{R"(
 		00000000
 		00000000
 		00001000
@@ -66,7 +66,7 @@ constexpr auto glider = square{R"(
 		00000000
 	)"};
 
-constexpr auto toad = square{R"(
+constexpr auto toad = square<8>{R"(
 		00000000
 		00000000
 		00000000
@@ -77,7 +77,7 @@ constexpr auto toad = square{R"(
 		00000000
 	)"};
 
-constexpr auto filled = square{R"(
+constexpr auto filled = square<8>{R"(
 		11111111
 		11111111
 		11111111
@@ -88,7 +88,7 @@ constexpr auto filled = square{R"(
 		11111111
 	)"};
 
-constexpr auto checkers = square{R"(
+constexpr auto checkers = square<8>{R"(
 		00000000
 		00101010
 		01010100
@@ -101,21 +101,15 @@ constexpr auto checkers = square{R"(
 
 
 TEST_CASE("An empty grid should remain empty across generations", "[empty]") {
-  REQUIRE(empty.next(10) == empty);
+  REQUIRE(empty.next() == empty);
+  REQUIRE(empty.future() == empty);
 }
 
 TEST_CASE("Oscillators should be equal a period apart, but unequal otherwise",
           "[oscillator]") {
-  REQUIRE(toad.next(2) == toad);
+  REQUIRE(toad.future() == toad);
   REQUIRE(toad.next() != toad);
-  REQUIRE(toad.next() == toad.next(3));
 
-  REQUIRE(blinker.next(2) == blinker);
+  REQUIRE(blinker.future() == blinker);
   REQUIRE(blinker.next() != blinker);
-  REQUIRE(blinker.next() == blinker.next(3));
-}
-
-TEST_CASE("A glider shifted once diagonally equals itself 4 generations advanced",
-          "[glider]") {
-  REQUIRE(glider.next(4) == glider.shift(1, 1));
 }
