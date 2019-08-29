@@ -27,5 +27,24 @@
 
 #include "macrocell.h"
 
+#include "rules.h"
+
 namespace life {
+
+//===-- Leaf --------------------------------------------------------------===//
+auto leaf::create(square<4> nw, square<4> ne, square<4> sw, square<4> se)
+    -> leaf {
+  return leaves.emplace(nw, ne, sw, se);
+}
+
+leaf::leaf(square<4> nw, square<4> ne, square<4> sw, square<4> se)
+    : cells{nw, ne, sw, se} {
+  cached_next = cells.next();
+  cached_future = cached_next.next();
+}
+
+leaf::leaf(square<8> cells) : cells{cells} {
+  cached_next = cells.next();
+  cached_future = cached_next.next();
+}
 } // namespace life

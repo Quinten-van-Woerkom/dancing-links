@@ -1,15 +1,12 @@
 #include <iostream>
 
-#include "bitmap.h"
 #include "macrocell.h"
 
 using namespace life;
 
 int main() {
-  hashtable<leaf> leaves;
-  leaves.emplace(1, 0, 0, 0);
-  leaves.emplace(0, 0, 0, 0);
-  leaves.emplace(0, 0, 0, 0);
-  leaves.emplace(1, 0, 0, 0);
+  auto res1 = leaf::create(0x38000000);
+  auto res2 = leaf::create(0x1010100000);
+  std::cout << std::hex << res1.future() << '\n' << res2.next();
   std::cout << "Hello, world!\n";
 }

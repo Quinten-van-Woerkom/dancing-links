@@ -40,7 +40,7 @@ class leaf;
 /// The universe is stored in terms of squares with edges multiples of 2 in
 /// size. Their state is stored in the form of references to smaller,
 /// canonicalized squares, as a quadtree.
-/// Only the state of 8x8 squares is stored explicitly as a bitmap<8>.
+/// Only the state of 8x8 squares is stored directly.
 class macrocell {
 public:
   /// Factory function that canonicalizes all macrocells.
@@ -117,7 +117,7 @@ public:
 private:
   /// All nodes are memoized when constructed using create(), to allow caching
   /// of futures.
-  static hashtable<node> nodes;
+  static inline hashtable<node> nodes;
 
   std::size_t depth;
   macrocell nw, ne, sw, se;
@@ -126,38 +126,41 @@ private:
 };
 
 
-/// Leaf macrocells directly store their cell states.
+/// Leaf macrocells (8x8) directly store their cell states.
 /// Futures are calculated directly.
 class leaf {
 public:
-  using cells = bitmap<8>;
+  /// Factory function that invokes the constructor and caches the result,
+  /// allowing for memoization of leaves.
+  static auto create(square<4> nw, square<4> ne, square<4> sw, square<4> se) -> leaf;
+  static auto create(square<8> cells) -> leaf { return leaves.emplace(cells); };
+
+  /// Constructors immediately populate the next and future fields, as
+  /// evaluation is relatively inexpensive.
+  /// Should not be called directly, but must be public to allow the hashtable
+  /// to access it.
+  /// @{
+  leaf(square<4> nw, square<4> ne, square<4> sw, square<4> se);
+  leaf(square<8> cells);
+  /// @}
 
   /// Returns the leaf's discriminator value and depth in the quadtree.
   auto level() const -> std::size_t { return this->depth; };
 
-  /// Construction is best done through factory functions, as that allows for
-  /// memoization.
-  /// @{
-  static auto create(cells nw, cells ne, cells sw, cells se) -> const leaf &;
-  /// @}
+  /// returns the leaf's state 2 generations into the future.
+  auto future() const -> square<4> { return this->cached_future; };
 
-  /// Constructors immediately populate the next and future fields.
-  /// This is relatively expensive, so it is best not to call the constructors
-  /// directly.
-  /// Constructors must be public to support hashtable usage.
-  /// @{
-  leaf(leaf *nw, leaf *ne, leaf *sw, leaf *se);
-  leaf(cells nw, cells ne, cells sw, cells se){};
-  /// @}
+  /// Returns the leaf's state 1 generation into the future.
+  auto next() const -> square<6> { return this->cached_next; };
 
 private:
-  /// All leaves are memoized when constructed using create(), to allow caching
+  /// All nodes are memoized when constructed using create(), to allow caching
   /// of futures.
-  static hashtable<leaf> leaves;
+  static inline hashtable<leaf> leaves;
 
-  const std::size_t depth = 4;
-  cells nw, ne, sw, se;
-  cells next;
-  cells future;
+  const std::size_t depth = 3;
+  square<8> cells;
+  square<6> cached_next;
+  square<4> cached_future;
 };
 } // namespace life

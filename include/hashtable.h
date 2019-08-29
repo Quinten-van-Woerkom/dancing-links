@@ -29,6 +29,7 @@
 #include <unordered_map>
 
 namespace life {
+namespace {
 /// Hash function for any set of arguments.
 /// Requires that the arguments be convertible to std::size_t
 template <typename... Args> auto hash(Args &&... args) noexcept -> std::size_t {
@@ -38,7 +39,6 @@ template <typename... Args> auto hash(Args &&... args) noexcept -> std::size_t {
   }
 }
 
-namespace {
 template <typename Arg, typename... Args>
 constexpr auto hash_impl(Arg&& arg, Args&& ... args) noexcept -> std::size_t {
   constexpr auto scalar = (1 << (sizeof...(args) + 1)) + 1;
@@ -62,7 +62,7 @@ public:
   template <typename... Args> auto emplace(Args &&... args) {
     auto key = hash(args...);
     auto result = elements.try_emplace(key, args...);
-    return *result.first;
+    return (*result.first).second;
   };
 
 private:

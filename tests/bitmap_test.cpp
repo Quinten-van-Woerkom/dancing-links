@@ -33,7 +33,7 @@
 
 using namespace life;
 
-constexpr auto empty = bitmap{R"(
+constexpr auto empty = square{R"(
 		00000000
 		00000000
 		00000000
@@ -44,7 +44,7 @@ constexpr auto empty = bitmap{R"(
 		00000000
 	)"};
 
-constexpr auto blinker = bitmap{R"(
+constexpr auto blinker = square{R"(
 		00000000
 		00000000
 		00000000
@@ -55,7 +55,7 @@ constexpr auto blinker = bitmap{R"(
 		00000000
 	)"};
 
-constexpr auto glider = bitmap{R"(
+constexpr auto glider = square{R"(
 		00000000
 		00000000
 		00001000
@@ -66,7 +66,7 @@ constexpr auto glider = bitmap{R"(
 		00000000
 	)"};
 
-constexpr auto toad = bitmap{R"(
+constexpr auto toad = square{R"(
 		00000000
 		00000000
 		00000000
@@ -77,7 +77,7 @@ constexpr auto toad = bitmap{R"(
 		00000000
 	)"};
 
-constexpr auto filled = bitmap{R"(
+constexpr auto filled = square{R"(
 		11111111
 		11111111
 		11111111
@@ -88,7 +88,7 @@ constexpr auto filled = bitmap{R"(
 		11111111
 	)"};
 
-constexpr auto checkers = bitmap{R"(
+constexpr auto checkers = square{R"(
 		00000000
 		00101010
 		01010100
