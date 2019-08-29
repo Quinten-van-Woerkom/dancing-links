@@ -1,4 +1,4 @@
-//===-- macrocell.cpp - Macrocell class definition --------------*- C++ -*-===//
+//===-- sudoku.cpp - Life rules test ----------------------------*- C++ -*-===//
 //
 // Hashlife
 // Copyright(C) 2019 Quinten van Woerkom
@@ -20,31 +20,20 @@
 //===----------------------------------------------------------------------===//
 ///
 /// \file
-/// Implementation of the macrocell type representing squares of cells of
-/// arbitrary size.
+/// Entrance for the sudoku solver application. Solves a sudoku as described in
+/// a given file.
 ///
 //===----------------------------------------------------------------------===//
 
-#include "macrocell.h"
+#include <iostream>
 
-#include "rules.h"
+#include "sudoku.h"
 
-namespace life {
+using namespace sudoku;
 
-//===-- Leaf --------------------------------------------------------------===//
-auto leaf::create(square<4> nw, square<4> ne, square<4> sw, square<4> se)
-    -> leaf {
-  return leaves.emplace(nw, ne, sw, se);
+int main() {
+  cell cell{};
+  cell.prune(1, 2, 3, 5, 6, 7, 8, 9);
+  std::cout << cell.solution() << '\n' << cell.count() << '\n';
+  std::cout << "Hello, world!\n";
 }
-
-leaf::leaf(square<4> nw, square<4> ne, square<4> sw, square<4> se)
-    : cells{nw, ne, sw, se} {
-  cached_next = cells.next();
-  cached_future = cached_next.next();
-}
-
-leaf::leaf(square<8> cells) : cells{cells} {
-  cached_next = cells.next();
-  cached_future = cached_next.next();
-}
-} // namespace life
