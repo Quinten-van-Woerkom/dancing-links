@@ -27,57 +27,111 @@
 
 #include "dancing_links.h"
 
+#include <iostream>
 #include <limits>
 
 using namespace sudo;
 
-void node::cover() { column->cover(); }
+/// When a node is covered, it means that its owning column is covered in its
+/// entirety.
+void node::cover() { owner->cover(); }
 
-void node::uncover() { column->cover(); }
+/// Uncovering a node is equivalent to uncovering its column.
+void node::uncover() { owner->cover(); }
 
-void column::cover() {
+/// Removal relinks the neighbours together, but leaves the removed node's
+/// pointers intact, to allow for reinsertion.
+void node::remove_from_row() {
   this->right->left = this->left;
   this->left->right = this->right;
-
-  for (auto i = this->down; i != this; i = i->down) {
-    for (auto j = this->right; j != i; j = j->right) {
-      j->down->up = j->up;
-      j->up->down = j->down;
-      j->owner->size -= 1;
-    }
-  }
 }
 
-void column::uncover() {
-  for (auto i = this->up; i != this; i = i->up) {
-    for (auto j = this->left; j != i; j = j->left) {
-      j->owner->size += 1;
-      j->down->up = j;
-      j->up->down = j;
-    }
-  }
+/// Removal from a column also decreases the column size.
+void node::remove_from_column() {
+  this->down->up = this->up;
+  this->up->down = this->down;
+  this->owner->index -= 1;
+}
 
+/// Reinsertion relinks the neighbours back to the node itself.
+void node::reinsert_into_row() {
   this->right->left = this;
   this->left->right = this;
 }
 
+/// Reinsertion into a column also increases the column size.
+void node::reinsert_into_column() {
+  this->index += 1;
+  this->down->up = this;
+  this->up->down = this;
+}
+
+/// When a column is covered, it is removed from the column list, and any rows
+/// with a one at this column position are removed as well, since they are no
+/// longer valid solutions to the exact cover problem.
+void column_header::cover() {
+  this->remove_from_row();
+
+  for (auto i = this->down; i != this; i = i->down) {
+    for (auto j = i->right; j != i; j = j->right) {
+      j->remove_from_column();
+    }
+  }
+}
+
+/// When a column is uncovered, it and any removed rows again become
+/// considerations in the exact cover problem.
+void column_header::uncover() {
+  for (auto i = this->up; i != this; i = i->up) {
+    for (auto j = i->left; j != i; j = j->left) {
+      j->reinsert_into_column();
+    }
+  }
+
+  this->reinsert_into_row();
+}
+
+/// Inserts a node at the end of the column with the given neighbours.
+void column_header::insert_node(node *left_node, node *right_node, std::size_t row_index) {
+  nodes.push_back({left_node, right_node, this->up, this, this, row_index});
+}
+
+/// Constructs a dancing links matrix representation of the given subsets
+/// representing the exact cover problem.
+matrix::matrix(
+    std::initializer_list<std::initializer_list<std::size_t>> subsets) {
+  for (const auto &subset : subsets) {
+    for (const auto &column : subset) {
+      
+    }
+  }
+}
+
+/// Searches the constraint space for a solution to the formulated exact cover
+/// problem.
 void matrix::search() {
-  if (this->right == this)
+  if (this->right == this) {
+    result.push_back(cache);
+    for (auto n : cache) {
+      std::cout << n->owner->name << ' ';
+    }
+    std::cout << '\n';
     return;
+  }
 
   /// We choose the column object c to operate on based on minimum size.
-  auto s = std::numeric_limits<std::size_t>::max();
-  auto c = static_cast<column*>(nullptr);
+  auto size = std::numeric_limits<std::size_t>::max();
+  auto c = static_cast<column_header *>(nullptr);
   for (auto j = this->right; j != this; j = j->right) {
-    if (j->owner->size < s) {
+    if (j->owner->index < size) {
       c = j->owner;
-      s = j->owner->size;
+      size = j->owner->index;
     }
   }
 
   c->cover();
   for (auto r = c->down; r != c; r = r->down) {
-    result.push_back(r);
+    cache.push_back(r);
     for (auto j = r->right; j != r; j = j->right) {
       j->cover();
     }
@@ -85,8 +139,9 @@ void matrix::search() {
     // We need to go deeper
     search();
 
-    r = result.pop_back();
-    c = r->column;
+    r = cache.back();
+    cache.pop_back();
+    c = r->owner;
     for (auto j = r->left; j != r; j = j->left) {
       j->uncover();
     }

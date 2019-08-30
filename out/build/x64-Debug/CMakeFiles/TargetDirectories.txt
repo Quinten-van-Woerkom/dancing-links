@@ -1,0 +1,11 @@
+D:/Coding/sudoku/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+D:/Coding/sudoku/out/build/x64-Debug/CMakeFiles/test.dir
+D:/Coding/sudoku/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+D:/Coding/sudoku/out/build/x64-Debug/src/CMakeFiles/edit_cache.dir
+D:/Coding/sudoku/out/build/x64-Debug/src/CMakeFiles/sudoku.dir
+D:/Coding/sudoku/out/build/x64-Debug/src/CMakeFiles/rebuild_cache.dir
+D:/Coding/sudoku/out/build/x64-Debug/src/CMakeFiles/test.dir
+D:/Coding/sudoku/out/build/x64-Debug/tests/CMakeFiles/rebuild_cache.dir
+D:/Coding/sudoku/out/build/x64-Debug/tests/CMakeFiles/test.dir
+D:/Coding/sudoku/out/build/x64-Debug/tests/CMakeFiles/sudoku_test.dir
+D:/Coding/sudoku/out/build/x64-Debug/tests/CMakeFiles/edit_cache.dir

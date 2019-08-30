@@ -33,7 +33,6 @@
 using namespace sudo;
 
 int main() {
-  node test;
 
   std::cout << "Hello, world!\n";
 }
