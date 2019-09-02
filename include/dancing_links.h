@@ -139,7 +139,10 @@ public:
 
   /// Size can be determined by full traversal of the linked list.
   constexpr auto size() const noexcept -> std::size_t {
-    return std::distance(begin(), end());
+    auto counter = 0;
+    for (const auto &node : *this)
+      ++counter;
+    return counter;
   }
 
   /// Adds an element to the back of the linked list.
