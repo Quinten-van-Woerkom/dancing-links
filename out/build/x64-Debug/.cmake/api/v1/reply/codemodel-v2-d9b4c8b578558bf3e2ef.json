@@ -57,7 +57,7 @@
 						1,
 						2
 					],
-					"name" : "Sudoku",
+					"name" : "Dancing_links",
 					"targetIndexes" : 
 					[
 						0,
@@ -69,16 +69,16 @@
 			[
 				{
 					"directoryIndex" : 1,
-					"id" : "sudoku::@145eef247bfb46b6828c",
-					"jsonFile" : "target-sudoku-Debug-f82e92c9538d173c003e.json",
-					"name" : "sudoku",
+					"id" : "dancing_links::@145eef247bfb46b6828c",
+					"jsonFile" : "target-dancing_links-Debug-4fd6280efa20d5573a52.json",
+					"name" : "dancing_links",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 2,
-					"id" : "sudoku_test::@a44f0ac069e85531cdee",
-					"jsonFile" : "target-sudoku_test-Debug-ef05722ec89f864f3397.json",
-					"name" : "sudoku_test",
+					"id" : "dancing_links_test::@a44f0ac069e85531cdee",
+					"jsonFile" : "target-dancing_links_test-Debug-af81b5489d19735ebab9.json",
+					"name" : "dancing_links_test",
 					"projectIndex" : 0
 				}
 			]
@@ -87,8 +87,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/Coding/sudoku/out/build/x64-Debug",
-		"source" : "D:/Coding/sudoku"
+		"build" : "D:/Coding/dancing-links/out/build/x64-Debug",
+		"source" : "D:/Coding/dancing-links"
 	},
 	"version" : 
 	{

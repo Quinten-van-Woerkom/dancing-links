@@ -1,4 +1,4 @@
-//===-- sudoku.cpp - Life rules test ----------------------------*- C++ -*-===//
+//===-- main.cpp - Dancing links --------------------------------*- C++ -*-===//
 //
 // Constraint-propagating sudoku solver.
 // Copyright(C) 2019 Quinten van Woerkom
@@ -20,19 +20,29 @@
 //===----------------------------------------------------------------------===//
 ///
 /// \file
-/// Entrance for the sudoku solver application. Solves a sudoku as described in
-/// a given file.
+/// Entrance for the dancing links application. Solves a given exact cover
+/// problem.
 ///
 //===----------------------------------------------------------------------===//
 
+#include <initializer_list>
 #include <iostream>
 
-#include "sudoku.h"
 #include "dancing_links.h"
 
 using namespace sudo;
 
 int main() {
+  auto problem = dancing_links(4, {{1, 2}, {0}, {0, 3}, {3}});
+
+  problem.solve_fully();
+  auto solutions = problem.solutions();
+  for (auto solution : solutions) {
+    for (auto option : solution) {
+      std::cout << option->get_index() << ", ";
+    }
+    std::cout << '\n';
+  }
 
   std::cout << "Hello, world!\n";
 }

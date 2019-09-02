@@ -27,124 +27,236 @@
 
 #include "dancing_links.h"
 
-#include <iostream>
-#include <limits>
+#include <algorithm>
+#include <cassert>
 
 using namespace sudo;
 
-/// When a node is covered, it means that its owning column is covered in its
-/// entirety.
-void node::cover() { owner->cover(); }
+//===-- node --------------------------------------------------------------===//
+/// Constructor for a node that is part of an item header.
+node::node() : up{this}, down{this}, top{nullptr}, owner{nullptr} {};
 
-/// Uncovering a node is equivalent to uncovering its column.
-void node::uncover() { owner->cover(); }
+/// Constructor for a normal node denoting an item in an option.
+node::node(node *up, node *down, item *top, option *owner)
+    : up{up}, down{down}, top{top}, owner{owner} {};
 
-/// Removal relinks the neighbours together, but leaves the removed node's
-/// pointers intact, to allow for reinsertion.
-void node::remove_from_row() {
-  this->right->left = this->left;
-  this->left->right = this->right;
-}
+/// Covers the item covered by this node.
+void node::cover() { top->cover(); }
 
-/// Removal from a column also decreases the column size.
-void node::remove_from_column() {
-  this->down->up = this->up;
+/// Uncovers the item covered by this node.
+void node::uncover() { top->uncover(); }
+
+/// Hides the option of which this node is part.
+void node::hide() { owner->hide(); }
+
+/// Unhides the option of which this node is part.
+void node::unhide() { owner->hide(); }
+
+/// Sets the item covered by this node.
+void node::assign_item(item& item) { this->top = &item; }
+
+/// A node can remove itself from its linked list by rewiring its neighbours.
+/// Removal is reversible because it does not reset the removed node's
+/// neighbour pointers.
+void node::remove() {
   this->up->down = this->down;
-  this->owner->index -= 1;
+  this->down->up = this->up;
+  this->top->shrink();
 }
 
-/// Reinsertion relinks the neighbours back to the node itself.
-void node::reinsert_into_row() {
-  this->right->left = this;
+/// A node can reinsert itself into its linked list by rewiring its
+/// neighbouring nodes.
+void node::reinsert() {
+  this->up->down = this;
+  this->down->up = this;
+  this->top->grow();
+}
+
+/// Links another node to be this node's upper neighbour.
+void node::link_previous(node &other) {
+  this->up = &other;
+  other.down = this;
+}
+
+/// Links another node to be this node's down neighbour.
+void node::link_next(node &other) {
+  this->down = &other;
+  other.up = this;
+}
+
+//===-- option ------------------------------------------------------------===//
+/// Creates an option covering the specified items in <items>.
+option::option(std::size_t index, std::vector<item> &items,
+               std::initializer_list<std::size_t> set)
+    : index{index} {
+  covered.reserve(set.size());
+  for (auto item : set) {
+    this->add_item(items[item]);
+  }
+}
+
+/// Hides an option from the candidate solution set.
+void option::hide() {
+  for (auto &node : covered)
+    node.remove();
+}
+
+/// Unhides an option from the candidate solution set.
+void option::unhide() {
+  for (auto &node : covered)
+    node.reinsert();
+}
+
+/// Covers all items covered by this option.
+void option::cover() {
+  for (auto &node : covered) {
+    node.cover();
+  }
+}
+
+/// Uncovers all items covered by this option.
+void option::uncover() {
+  for (auto &node : covered)
+    node.uncover();
+}
+
+/// Adds a node covering an item.
+/// Added at the end of the node vector.
+void option::add_item(item &item) {
+  covered.emplace_back(nullptr, nullptr, &item, this);
+  item.add_node(covered.back());
+}
+
+//===-- item --------------------------------------------------------------===//
+/// An item can be covered when an option containing it has been selected as
+/// part of the candidate solution set, removing all options containing this
+/// item from the solution set.
+/// Covering is reversible.
+void item::cover() {
+  for (auto &option : options)
+    option.hide();
+
+  this->remove();
+}
+
+/// Reverts the covering of an option, adding it back into the candidate
+/// solution set, effectively walking one step back up the search tree.
+void item::uncover() {
+  this->reinsert();
+  for (auto &option : options)
+    option.unhide();
+}
+
+/// An item can remove itself from its linked list by rewiring its neighbours.
+/// Removal is reversible because it does not reset the removed node's
+/// neighbour pointers.
+void item::remove() const {
+  this->left->right = this->right;
+  this->right->left = this->left;
+}
+
+/// An item can reinsert itself into its linked list by rewiring its
+/// neighbouring nodes.
+void item::reinsert() {
+  this->left->right = this;
   this->left->right = this;
 }
 
-/// Reinsertion into a column also increases the column size.
-void node::reinsert_into_column() {
-  this->index += 1;
-  this->down->up = this;
-  this->up->down = this;
+/// Links another item to be the left neighbour of this item.
+void item::link_previous(item &other) {
+  this->left = &other;
+  other.right = this;
 }
 
-/// When a column is covered, it is removed from the column list, and any rows
-/// with a one at this column position are removed as well, since they are no
-/// longer valid solutions to the exact cover problem.
-void column_header::cover() {
-  this->remove_from_row();
+/// Links another item to be the right neighbour of this item.
+void item::link_next(item &other) {
+  this->right = &other;
+  other.left = this;
+}
 
-  for (auto i = this->down; i != this; i = i->down) {
-    for (auto j = i->right; j != i; j = j->right) {
-      j->remove_from_column();
-    }
+/// Adds a node to the end of the item list.
+void item::add_node(node &node) {
+  node.assign_item(*this);
+  options.push_back(node);
+  size += 1;
+}
+
+//===-- dancing links -----------------------------------------------------===//
+/// Constructs an exact cover problem with a given number of items.
+dancing_links::dancing_links(
+    std::size_t n_items,
+    std::initializer_list<std::initializer_list<std::size_t>> sets)
+    : items{n_items} {
+  remaining_items.push_back(items);
+  options.reserve(sets.size());
+  for (const auto set : sets) {
+    options.emplace_back(options.size(), items, set);
   }
 }
 
-/// When a column is uncovered, it and any removed rows again become
-/// considerations in the exact cover problem.
-void column_header::uncover() {
-  for (auto i = this->up; i != this; i = i->up) {
-    for (auto j = i->left; j != i; j = j->left) {
-      j->reinsert_into_column();
-    }
-  }
-
-  this->reinsert_into_row();
-}
-
-/// Inserts a node at the end of the column with the given neighbours.
-void column_header::insert_node(node *left_node, node *right_node, std::size_t row_index) {
-  nodes.push_back({left_node, right_node, this->up, this, this, row_index});
-}
-
-/// Constructs a dancing links matrix representation of the given subsets
-/// representing the exact cover problem.
-matrix::matrix(
-    std::initializer_list<std::initializer_list<std::size_t>> subsets) {
-  for (const auto &subset : subsets) {
-    for (const auto &column : subset) {
-      
-    }
-  }
-}
-
-/// Searches the constraint space for a solution to the formulated exact cover
-/// problem.
-void matrix::search() {
-  if (this->right == this) {
-    result.push_back(cache);
-    for (auto n : cache) {
-      std::cout << n->owner->name << ' ';
-    }
-    std::cout << '\n';
+/// Recursively searches the set of options to find all subsets exactly
+/// covering all given items. Resulting covering subsets are stored in
+/// <solutions>.
+void dancing_links::solve_fully() {
+  if (this->exact_cover()) {
+    solutions_found.push_back(current_subset);
     return;
   }
 
-  /// We choose the column object c to operate on based on minimum size.
-  auto size = std::numeric_limits<std::size_t>::max();
-  auto c = static_cast<column_header *>(nullptr);
-  for (auto j = this->right; j != this; j = j->right) {
-    if (j->owner->index < size) {
-      c = j->owner;
-      size = j->owner->index;
-    }
+  auto &item = next_candidate();
+
+  if (!item.satisfiable()) { // Current subset is invalid
+    return;
   }
 
-  c->cover();
-  for (auto r = c->down; r != c; r = r->down) {
-    cache.push_back(r);
-    for (auto j = r->right; j != r; j = j->right) {
-      j->cover();
-    }
-
-    // We need to go deeper
-    search();
-
-    r = cache.back();
-    cache.pop_back();
-    c = r->owner;
-    for (auto j = r->left; j != r; j = j->left) {
-      j->uncover();
-    }
+  for (auto &node : item.covering_options()) {
+    auto &option = node.parent_option();
+    current_subset.push_back(&option);
+    option.cover();
+    solve_fully();
+    option.uncover();
+    current_subset.pop_back();
   }
-  c->uncover();
+}
+
+/// Recursively searches the set of options to find a subset exactly
+/// covering all given items.
+auto dancing_links::solve() -> std::vector<option *> {
+  if (this->exact_cover()) {
+    return current_subset;
+  }
+
+  auto &item = next_candidate();
+
+  if (!item.satisfiable()) { // Current subset is invalid
+    return current_subset;
+  }
+
+  std::vector<option *> result;
+  for (auto &node : item.covering_options()) {
+    auto &option = node.parent_option();
+    current_subset.push_back(&option);
+    option.cover();
+    result = solve();
+    option.uncover();
+    current_subset.pop_back();
+  }
+  return result;
+}
+
+/// Returns true if the current subset of options covers all items.
+/// Determines whether or not this is the case by testing if the linked list of
+/// items that remain to be covered is empty.
+auto dancing_links::exact_cover() const -> bool {
+  return remaining_items.empty();
+}
+
+/// Returns the next item to be covered.
+/// Current heuristic for determining this candidate is the one with
+/// the smallest size.
+auto dancing_links::next_candidate() -> item & {
+  return *std::min_element(remaining_items.begin(), remaining_items.end(),
+                           [](const auto &left, const auto &right) {
+                             return left.count() < right.count();
+                           });
 }

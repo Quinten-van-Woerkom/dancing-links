@@ -23,7 +23,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "d:/Coding/sudoku/out/build/x64-Debug"
+			"value" : "d:/Coding/dancing-links/out/build/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -399,7 +399,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "D:/Coding/sudoku"
+			"value" : "D:/Coding/dancing-links"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -411,7 +411,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "D:/Coding/sudoku/out/install/x64-Debug"
+			"value" : "D:/Coding/dancing-links/out/install/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -571,7 +571,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C++ sudoku solver"
+			"value" : "C++ implementation of Donald Knuth's dancing links algorithm for solving exact cover problems"
 		},
 		{
 			"name" : "CMAKE_PROJECT_HOMEPAGE_URL",
@@ -595,7 +595,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "Sudoku"
+			"value" : "Dancing_links"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION",
@@ -986,7 +986,7 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "Sudoku_BINARY_DIR",
+			"name" : "DancingLinks_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -995,10 +995,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Coding/sudoku/out/build/x64-Debug"
+			"value" : "D:/Coding/dancing-links/out/build/x64-Debug"
 		},
 		{
-			"name" : "Sudoku_SOURCE_DIR",
+			"name" : "DancingLinks_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1007,7 +1007,55 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Coding/sudoku"
+			"value" : "D:/Coding/dancing-links"
+		},
+		{
+			"name" : "Dancing_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "D:/Coding/dancing-links/out/build/x64-Debug"
+		},
+		{
+			"name" : "Dancing_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "D:/Coding/dancing-links"
+		},
+		{
+			"name" : "Dancing_links_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "D:/Coding/dancing-links/out/build/x64-Debug"
+		},
+		{
+			"name" : "Dancing_links_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "D:/Coding/dancing-links"
 		}
 	],
 	"kind" : "cache",

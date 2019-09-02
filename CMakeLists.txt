@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(Sudoku
+project(Dancing_links
 	VERSION 0.1
-	DESCRIPTION "C++ sudoku solver"
+	DESCRIPTION "C++ implementation of Donald Knuth's dancing links algorithm for solving exact cover problems"
 	LANGUAGES CXX)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
