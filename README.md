@@ -1,2 +1,2 @@
-# sudoku
-C++ implementation of a constraint-propagating sudoku solver.
+# dancing links
+C++ implementation of Donald Knuth's dancing links algorithm for solving exact cover problems.
