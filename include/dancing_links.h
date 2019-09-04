@@ -213,15 +213,10 @@ public:
       std::initializer_list<std::initializer_list<std::size_t>> options);
 
   /// Searches the set of options for all subsets exactly covering all items.
-  void solve_fully();
+  auto solve() -> std::vector<std::vector<std::size_t>>;
 
   /// Searches the set of options for a subset exactly covering all items.
-  auto solve() -> std::vector<option *>;
-
-  /// Returns the solutions, if any, to the given problem.
-  auto solutions() -> std::vector<std::vector<option *>> {
-    return solutions_found;
-  }
+  auto quicksolve() -> std::vector<std::size_t>;
 
 private:
   /// Returns true if the current subset of options covers all items.
@@ -235,7 +230,7 @@ private:
 
   linked_list<item> items = {};
   std::vector<option> options = {};
-  std::vector<option *> current_subset = {};
-  std::vector<std::vector<option *>> solutions_found = {};
+  std::vector<std::size_t> current_subset = {};
+  std::vector<std::vector<std::size_t>> solutions = {};
 };
 } // namespace dlx

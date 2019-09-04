@@ -37,14 +37,17 @@ using namespace dlx;
 int main() {
   auto problem = dancing_links(4, {{1, 2}, {0}, {0, 3}, {3}});
 
-  problem.solve_fully();
-  auto solutions = problem.solutions();
+  auto solutions = problem.solve();
   for (auto solution : solutions) {
-    for (auto option : solution) {
-      std::cout << option->get_index() << ", ";
+    for (auto& option : solution) {
+      std::cout << option << ", ";
     }
     std::cout << '\n';
   }
+  /*auto solution = problem.solve();
+  for (auto &option : solution) {
+    std::cout << option << ", ";
+  }*/
 
   std::cout << "Hello, world!\n";
 }

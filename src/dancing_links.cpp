@@ -183,31 +183,32 @@ dancing_links::dancing_links(
 /// Recursively searches the set of options to find all subsets exactly
 /// covering all given items. Resulting covering subsets are stored in
 /// <solutions>.
-void dancing_links::solve_fully() {
+auto dancing_links::solve() -> std::vector<std::vector<std::size_t>> {
   if (this->exact_cover()) {
-    solutions_found.push_back(current_subset);
-    return;
+    solutions.push_back(current_subset);
+    return solutions;
   }
 
   auto &item = next_candidate();
 
   if (!item.satisfiable()) { // Current subset is invalid
-    return;
+    return solutions;
   }
 
   for (auto &node : item.covering_options()) {
     auto &option = node.parent_option();
-    current_subset.push_back(&option);
+    current_subset.push_back(option.get_index());
     option.cover();
-    solve_fully();
+    solve();
     option.uncover();
     current_subset.pop_back();
   }
+  return solutions;
 }
 
 /// Recursively searches the set of options to find a subset exactly
 /// covering all given items.
-auto dancing_links::solve() -> std::vector<option *> {
+auto dancing_links::quicksolve() -> std::vector<std::size_t> {
   if (this->exact_cover()) {
     return current_subset;
   }
@@ -218,16 +219,16 @@ auto dancing_links::solve() -> std::vector<option *> {
     return current_subset;
   }
 
-  std::vector<option *> result;
   for (auto &node : item.covering_options()) {
     auto &option = node.parent_option();
-    current_subset.push_back(&option);
+    current_subset.push_back(option.get_index());
     option.cover();
-    result = solve();
+    auto result = quicksolve();
+    if (!result.empty())
+      return result;
     option.uncover();
     current_subset.pop_back();
   }
-  return result;
 }
 
 /// Returns true if the current subset of options covers all items.
