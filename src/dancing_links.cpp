@@ -33,26 +33,23 @@
 using namespace dlx;
 
 //===-- node --------------------------------------------------------------===//
-/// Constructor for a node that is part of an item header.
-node::node() : up{this}, down{this}, top{nullptr}, owner{nullptr} {};
-
 /// Constructor for a normal node denoting an item in an option.
-node::node(node *up, node *down, item *top, option *owner)
-    : up{up}, down{down}, top{top}, owner{owner} {
-  this->top->add_node(*this);
+node::node(item &top, option &owner)
+    : up{nullptr}, down{nullptr}, top{top}, owner{owner} {
+  top.add_node(*this);
 };
 
 /// Covers the item covered by this node.
-void node::cover() { top->cover(); }
+void node::cover() { top.cover(); }
 
 /// Uncovers the item covered by this node.
-void node::uncover() { top->uncover(); }
+void node::uncover() { top.uncover(); }
 
 /// Hides the option of which this node is part.
-void node::hide() { owner->hide(); }
+void node::hide() { owner.hide(); }
 
 /// Unhides the option of which this node is part.
-void node::unhide() { owner->hide(); }
+void node::unhide() { owner.unhide(); }
 
 /// A node can remove itself from its linked list by rewiring its neighbours.
 /// Removal is reversible because it does not reset the removed node's
@@ -60,7 +57,7 @@ void node::unhide() { owner->hide(); }
 void node::remove() {
   this->up->down = this->down;
   this->down->up = this->up;
-  this->top->shrink();
+  top.shrink();
 }
 
 /// A node can reinsert itself into its linked list by rewiring its
@@ -68,7 +65,7 @@ void node::remove() {
 void node::reinsert() {
   this->up->down = this;
   this->down->up = this;
-  this->top->grow();
+  top.grow();
 }
 
 /// Links another node to be this node's upper neighbour.
@@ -90,7 +87,7 @@ option::option(std::size_t index, linked_list<item> &items,
     : index{index} {
   covered.reserve(set.size());
   for (auto item : set) {
-    this->add_item(items[item]);
+    covered.emplace_back(items[item], *this);
   }
 }
 
@@ -119,12 +116,6 @@ void option::uncover() {
     node.uncover();
 }
 
-/// Adds a node covering an item.
-/// Added at the end of the node vector.
-void option::add_item(item &item) {
-  covered.emplace_back(nullptr, nullptr, &item, this);
-}
-
 //===-- item --------------------------------------------------------------===//
 /// An item can be covered when an option containing it has been selected as
 /// part of the candidate solution set, removing all options containing this
@@ -133,7 +124,6 @@ void option::add_item(item &item) {
 void item::cover() {
   for (auto &option : options)
     option.hide();
-
   this->remove();
 }
 

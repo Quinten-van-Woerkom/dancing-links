@@ -105,7 +105,6 @@ private:
 };
 } // namespace
 
-
 //===-- linked list -----------------------------------------------------=====//
 /// Linked list that allows reversible removal and insertion of its nodes.
 template <typename T> class linked_list {
@@ -113,29 +112,27 @@ public:
   using iterator = iterator<T>;
   using const_iterator = const_iterator<T>;
 
-  linked_list() { root.link_next(root); }
+  linked_list() : head{&root()}, tail{&root()} {}
 
   linked_list(std::size_t size) : nodes{size} {
     for (auto [previous, current] : stx::pairwise(nodes)) {
       previous.link_next(current);
     }
-    root.link_next(nodes.front());
-    root.link_previous(nodes.back());
+    link_head(nodes.front());
+    link_tail(nodes.back());
   }
 
   /// Iterators into the linked list.
   /// @{
-  constexpr auto begin() const noexcept -> const_iterator {
-    return root.next();
-  };
-  constexpr auto begin() noexcept -> iterator { return root.next(); };
-  constexpr auto end() const noexcept -> const_iterator { return root; };
-  constexpr auto end() noexcept -> iterator { return root; };
+  constexpr auto begin() const noexcept { return const_iterator{*head}; };
+  constexpr auto begin() noexcept { return iterator{*head}; };
+  constexpr auto end() const noexcept { return const_iterator{root()}; };
+  constexpr auto end() noexcept { return iterator{root()}; };
   /// @}
 
   /// A linked list is empty if its root node has itself as neighbours.
   constexpr auto empty() const noexcept -> bool {
-    return &root.next() == &root;
+    return head == &root();
   };
 
   /// Size can be determined by full traversal of the linked list.
@@ -144,10 +141,18 @@ public:
   }
 
   /// Adds an element to the back of the linked list.
-  constexpr void push_back(const T other) {
+  constexpr void push_back(const T& other) {
     nodes.push_back(other);
-    root.previous().link_next(nodes.back());
-    root.link_previous(nodes.back());
+    tail->link_next(nodes.back());
+    link_tail(nodes.back());
+  };
+
+  /// Adds an element to the back of the linked list.
+  template<typename... Args>
+  constexpr void emplace_back(Args&&... args) {
+    nodes.emplace_back(args...);
+    tail->link_next(nodes.back());
+    link_tail(nodes.back());
   };
 
   /// Indexing directly into the vector is possible.
@@ -159,8 +164,17 @@ public:
   /// @}
 
 private:
+  T *tail, *head;
   std::vector<T> nodes;
-  T root;
+
+  /// Returns the this pointer interpreted as a pointer to a node.
+  /// @{
+  auto root() -> T & { return *reinterpret_cast<T *>(this); }
+  auto root() const -> const T & { return *reinterpret_cast<const T *>(this); }
+  /// @}
+
+  void link_tail(T &node) { root().link_previous(node); }
+  void link_head(T &node) { root().link_next(node); }
 };
 
 //===-- list view -------------------------------------------------------=====//
@@ -170,28 +184,27 @@ public:
   using iterator = iterator<T>;
   using const_iterator = const_iterator<T>;
 
-  constexpr list_view() { root.link_next(root); };
+  constexpr list_view() { root().link_next(root()); };
 
-  template<typename Iterable>
-  list_view(Iterable &nodes) : root{} {
+  template <typename Iterable> list_view(Iterable &nodes) {
     for (auto [previous, current] : stx::pairwise(nodes)) {
       previous.link_next(current);
     }
-    root.link_next(nodes.front());
-    root.link_previous(nodes.back());
+    link_head(nodes.front());
+    link_tail(nodes.back());
   }
 
   /// Iterators into the linked list.
   /// @{
-  constexpr auto begin() const noexcept { return const_iterator{root.next()}; };
-  constexpr auto begin() noexcept { return iterator{root.next()}; };
-  constexpr auto end() const noexcept { return const_iterator{root}; };
-  constexpr auto end() noexcept { return iterator{root}; };
+  constexpr auto begin() const noexcept { return const_iterator{*head}; };
+  constexpr auto begin() noexcept { return iterator{*head}; };
+  constexpr auto end() const noexcept { return const_iterator{root()}; };
+  constexpr auto end() noexcept { return iterator{root()}; };
   /// @}
 
   /// A linked list is empty if its root node is its own neighbour.
   constexpr auto empty() const noexcept -> bool {
-    return &root.next() == &root;
+    return head == &root();
   };
 
   /// Size can be determined by full traversal of the linked list.
@@ -201,21 +214,29 @@ public:
 
   /// Adds an element to the back of the linked list.
   constexpr void push_back(T &other) {
-    root.previous().link_next(other);
-    root.link_previous(other);
+    head->link_next(other);
+    link_tail(other);
   };
 
   /// Adds a container of elements to the back of the linked list.
-  template<typename Iterable>
-  void push_back(Iterable &nodes) {
+  template <typename Iterable> void push_back(Iterable &nodes) {
     for (auto &node : stx::pairwise(nodes)) {
       previous.link_next(node);
     }
-    root.link_next(nodes.front());
-    root.link_previous(nodes.back());
+    link_head(nodes.front());
+    link_tail(nodes.back());
   }
 
 private:
-  T root;
+  /// Returns the this pointer interpreted as a pointer to a node.
+  /// @{
+  auto root() -> T & { return *reinterpret_cast<T *>(this); }
+  auto root() const -> const T & { return *reinterpret_cast<const T *>(this); }
+  /// @}
+
+  void link_tail(T &node) { root().link_previous(node); }
+  void link_head(T &node) { root().link_next(node); }
+
+  T *tail, *head;
 };
 } // namespace dlx

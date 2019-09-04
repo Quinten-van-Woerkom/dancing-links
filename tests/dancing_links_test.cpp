@@ -36,32 +36,8 @@ TEST_CASE("Catch works", "[catch]") {
   REQUIRE(false == false);
 }
 
-TEST_CASE("Can initialize linked list with vector", "[linked_list]") {
-  std::vector<node> nodes{12};
-  list_view<node> list{nodes};
-  const auto og_root = &*list.end();
-
-  auto counter = 0;
-  const auto *previous = &*list.end();
-  for (const auto &node : list) {
-    REQUIRE(&previous->next() == &node);
-    previous = &node;
-    ++counter;
-  }
-  REQUIRE(counter == nodes.size());
-
-  for (auto i = 1; i < nodes.size() - 1; ++i) {
-    REQUIRE(&nodes[i].previous() == &nodes[i - 1]);
-    REQUIRE(&nodes[i].next() == &nodes[i + 1]);
-  }
-
-  REQUIRE(&nodes.back().next() == &*list.end());
-  REQUIRE(&(*list.end()).next() == &nodes.front());
-  REQUIRE(&*list.end() == og_root);
-}
-
 TEST_CASE("A linked list containing only the root behaves as an empty list",
-    "[linked_list]") {
+          "[linked_list]") {
   list_view<node> list{};
   REQUIRE(list.size() == 0);
   REQUIRE(list.begin() == list.end());
@@ -80,22 +56,25 @@ TEST_CASE("Can traverse an item's linked list of covering options", "[item]") {
 }
 
 TEST_CASE("A node can remove itself reversibly from a linked list", "[node]") {
-  std::vector<node> nodes{2};
   item dummy_owner{};
+  option dummy_option{2};
+  /*std::vector<node> nodes{{nullptr, nullptr, dummy_owner, dummy_option},
+                          {nullptr, nullptr, dummy_owner, dummy_option}};
 
-  for (auto &element : nodes)
-    element = node{nullptr, nullptr, &dummy_owner, nullptr};
+  list_view<node> list{nodes};*/
+  linked_list<node> list;
+  list.emplace_back(nullptr, nullptr, dummy_owner, dummy_option);
+  list.emplace_back(nullptr, nullptr, dummy_owner, dummy_option);
 
-  list_view<node> list{nodes};
   REQUIRE(list.size() == 2);
 
-  nodes.front().remove();
+  list[0].remove();
   REQUIRE(list.size() == 1);
 
-  nodes.back().remove();
+  list[1].remove();
   REQUIRE(list.size() == 0);
 
-  nodes.front().reinsert();
-  nodes.back().reinsert();
+  list[0].reinsert();
+  list[1].reinsert();
   REQUIRE(list.size() == 2);
 }

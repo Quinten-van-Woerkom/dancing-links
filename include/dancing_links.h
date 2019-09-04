@@ -44,15 +44,20 @@ class item;
 class option;
 
 //===-- node --------------------------------------------------------------===//
-/// A node can be one of two things:
-/// 1. Part of an item header.
-/// 2. An object denoting the presence of an item in an option.
+/// A node denotes the presence of an item in a given option.
 class node {
 public:
   /// Constructors for an item header and item.
   /// @{
-  node();
-  node(node *up, node *down, item *top, option *owner);
+  node(item &top, option &owner);
+  /// @}
+
+  /// Copy and move constructors and assignment operators are defaulted.
+  /// @{
+  node(const node &) = default;
+  node(node &&) = default;
+  node &operator=(const node &) = default;
+  node &operator=(node &&) = default;
   /// @}
 
   /// A node can cover or uncover its parent item.
@@ -89,12 +94,12 @@ public:
 
   /// Returns the option of which this node is part.
   // auto parent_option() const noexcept -> const option & { return *owner; };
-  auto parent_option() noexcept -> option & { return *owner; };
+  auto parent_option() noexcept -> option & { return owner; };
 
 private:
   node *up, *down;
-  item *top;
-  option *owner;
+  item &top;
+  option &owner;
 };
 
 //===-- option ------------------------------------------------------------===//
@@ -121,9 +126,6 @@ public:
   void uncover();
   /// @}
 
-  /// Adds a node covering an item.
-  void add_item(item &item);
-
   /// Returns the index corresponding with the option.
   auto get_index() const -> std::size_t { return index; };
 
@@ -131,7 +133,7 @@ public:
   auto size() const -> std::size_t { return covered.size(); };
 
 private:
-  std::vector<node> covered = {};
+  std::vector<node> covered;
   std::size_t index;
 };
 
@@ -236,4 +238,4 @@ private:
   std::vector<option *> current_subset = {};
   std::vector<std::vector<option *>> solutions_found = {};
 };
-} // namespace sudo
+} // namespace dlx
