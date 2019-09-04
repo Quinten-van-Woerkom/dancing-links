@@ -29,7 +29,7 @@
 
 #include "../include/dancing_links.h"
 
-using namespace sudo;
+using namespace dlx;
 
 TEST_CASE("Catch works", "[catch]") {
   REQUIRE(true == true);
@@ -38,7 +38,7 @@ TEST_CASE("Catch works", "[catch]") {
 
 TEST_CASE("Can initialize linked list with vector", "[linked_list]") {
   std::vector<node> nodes{12};
-  linked_list<node> list{nodes};
+  list_view<node> list{nodes};
   const auto og_root = &*list.end();
 
   auto counter = 0;
@@ -62,7 +62,7 @@ TEST_CASE("Can initialize linked list with vector", "[linked_list]") {
 
 TEST_CASE("A linked list containing only the root behaves as an empty list",
     "[linked_list]") {
-  linked_list<node> list{};
+  list_view<node> list{};
   REQUIRE(list.size() == 0);
   REQUIRE(list.begin() == list.end());
 }
@@ -83,10 +83,10 @@ TEST_CASE("A node can remove itself reversibly from a linked list", "[node]") {
   std::vector<node> nodes{2};
   item dummy_owner{};
 
-  for (node &node : nodes)
-    dummy_owner.add_node(node);
+  for (auto &element : nodes)
+    element = node{nullptr, nullptr, &dummy_owner, nullptr};
 
-  linked_list<node> list{nodes};
+  list_view<node> list{nodes};
   REQUIRE(list.size() == 2);
 
   nodes.front().remove();

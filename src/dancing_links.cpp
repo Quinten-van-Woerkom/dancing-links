@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <cassert>
 
-using namespace sudo;
+using namespace dlx;
 
 //===-- node --------------------------------------------------------------===//
 /// Constructor for a node that is part of an item header.
@@ -38,7 +38,9 @@ node::node() : up{this}, down{this}, top{nullptr}, owner{nullptr} {};
 
 /// Constructor for a normal node denoting an item in an option.
 node::node(node *up, node *down, item *top, option *owner)
-    : up{up}, down{down}, top{top}, owner{owner} {};
+    : up{up}, down{down}, top{top}, owner{owner} {
+  this->top->add_node(*this);
+};
 
 /// Covers the item covered by this node.
 void node::cover() { top->cover(); }
@@ -51,9 +53,6 @@ void node::hide() { owner->hide(); }
 
 /// Unhides the option of which this node is part.
 void node::unhide() { owner->hide(); }
-
-/// Sets the item covered by this node.
-void node::assign_item(item& item) { this->top = &item; }
 
 /// A node can remove itself from its linked list by rewiring its neighbours.
 /// Removal is reversible because it does not reset the removed node's
@@ -86,7 +85,7 @@ void node::link_next(node &other) {
 
 //===-- option ------------------------------------------------------------===//
 /// Creates an option covering the specified items in <items>.
-option::option(std::size_t index, std::vector<item> &items,
+option::option(std::size_t index, linked_list<item> &items,
                std::initializer_list<std::size_t> set)
     : index{index} {
   covered.reserve(set.size());
@@ -124,7 +123,6 @@ void option::uncover() {
 /// Added at the end of the node vector.
 void option::add_item(item &item) {
   covered.emplace_back(nullptr, nullptr, &item, this);
-  item.add_node(covered.back());
 }
 
 //===-- item --------------------------------------------------------------===//
@@ -176,7 +174,6 @@ void item::link_next(item &other) {
 
 /// Adds a node to the end of the item list.
 void item::add_node(node &node) {
-  node.assign_item(*this);
   options.push_back(node);
   size += 1;
 }
@@ -187,7 +184,6 @@ dancing_links::dancing_links(
     std::size_t n_items,
     std::initializer_list<std::initializer_list<std::size_t>> sets)
     : items{n_items} {
-  remaining_items.push_back(items);
   options.reserve(sets.size());
   for (const auto set : sets) {
     options.emplace_back(options.size(), items, set);
@@ -248,14 +244,14 @@ auto dancing_links::solve() -> std::vector<option *> {
 /// Determines whether or not this is the case by testing if the linked list of
 /// items that remain to be covered is empty.
 auto dancing_links::exact_cover() const -> bool {
-  return remaining_items.empty();
+  return items.empty();
 }
 
 /// Returns the next item to be covered.
 /// Current heuristic for determining this candidate is the one with
 /// the smallest size.
 auto dancing_links::next_candidate() -> item & {
-  return *std::min_element(remaining_items.begin(), remaining_items.end(),
+  return *std::min_element(items.begin(), items.end(),
                            [](const auto &left, const auto &right) {
                              return left.count() < right.count();
                            });

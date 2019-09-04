@@ -30,7 +30,9 @@
 
 #include "dancing_links.h"
 
-using namespace sudo;
+using namespace dlx;
+
+#include <array>
 
 int main() {
   auto problem = dancing_links(4, {{1, 2}, {0}, {0, 3}, {3}});

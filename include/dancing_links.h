@@ -34,139 +34,14 @@
 #include <type_traits>
 #include <vector>
 
-namespace sudo {
+#include "linked_list.h"
+
+namespace dlx {
 /// A dancing links matrix is a boolean matrix, stored as a circular four-way
 /// doubly linked lists of nodes representing the ones in each row and column.
 class node;
 class item;
 class option;
-
-//===-- linked list -------------------------------------------------------===//
-/// Non-owning linked list wrapper to allow iteration over the nodes of a
-/// linked list. Requires that the node type has member functions next() and
-/// previous().
-template <typename Node> class linked_list {
-public:
-  constexpr linked_list() { root.link_next(root); };
-
-  linked_list(std::vector<Node> &nodes) : root{} {
-    auto *previous = &root;
-    for (auto &node : nodes) {
-      previous->link_next(node);
-      previous = &node;
-    }
-    root.link_previous(nodes.back());
-  }
-
-  class iterator {
-  public:
-    constexpr iterator(Node &node) : current{&node} {};
-
-    constexpr auto operator++() noexcept -> iterator & {
-      current = &(current->next());
-      return *this;
-    };
-
-    constexpr auto operator--() noexcept -> iterator & {
-      current = &(current->previous());
-      return *this;
-    };
-
-    constexpr bool operator!=(const iterator &other) const noexcept {
-      return other.current != current;
-    };
-
-    constexpr bool operator==(const iterator &other) const noexcept {
-      return other.current == current;
-    };
-
-    constexpr auto operator*() const noexcept -> const Node & {
-      return *current;
-    };
-    constexpr auto operator*() noexcept -> Node & { return *current; };
-
-  private:
-    Node *current;
-  };
-
-  class const_iterator {
-  public:
-    constexpr const_iterator(const Node &node) : current{&node} {};
-
-    constexpr auto operator++() noexcept -> const_iterator & {
-      current = &current->next();
-      return *this;
-    };
-
-    constexpr auto operator--() noexcept -> const_iterator & {
-      current = &current->previous();
-      return *this;
-    };
-
-    constexpr bool operator!=(const const_iterator &other) const noexcept {
-      return other.current != current;
-    };
-
-    constexpr bool operator==(const const_iterator &other) const noexcept {
-      return other.current == current;
-    };
-
-    constexpr auto operator*() const noexcept -> const Node & {
-      return *current;
-    };
-
-  private:
-    const Node *current;
-  };
-
-  /// Iterators into the linked list.
-  /// @{
-  constexpr auto begin() const noexcept -> const_iterator {
-    return root.next();
-  };
-
-  constexpr auto begin() noexcept -> iterator { return root.next(); };
-
-  constexpr auto end() const noexcept -> const_iterator { return root; };
-
-  constexpr auto end() noexcept -> iterator { return root; };
-  /// @}
-
-  /// A linked list is empty if its root node has itself as neighbours.
-  constexpr auto empty() const noexcept -> bool {
-    return &root.next() == &root;
-  };
-
-  /// Size can be determined by full traversal of the linked list.
-  constexpr auto size() const noexcept -> std::size_t {
-    auto counter = 0;
-    for (const auto &node : *this)
-      ++counter;
-    return counter;
-  }
-
-  /// Adds an element to the back of the linked list.
-  constexpr void push_back(Node &other) {
-    root.previous().link_next(other);
-    root.link_previous(other);
-  };
-
-  /// Adds a vector of elements to the back of the linked list.
-  void push_back(std::vector<Node> &nodes) {
-    auto *previous = &root.previous();
-    for (auto &node : nodes) {
-      previous->link_next(node);
-      previous = &node;
-    }
-    root.link_previous(nodes.back());
-  }
-
-  /// Provides access to the root.
-  constexpr auto get_root() const -> const Node & { return root; };
-
-private:
-  Node root;
-};
 
 //===-- node --------------------------------------------------------------===//
 /// A node can be one of two things:
@@ -216,9 +91,6 @@ public:
   // auto parent_option() const noexcept -> const option & { return *owner; };
   auto parent_option() noexcept -> option & { return *owner; };
 
-  /// Assigns the node to an item.
-  void assign_item(item &item);
-
 private:
   node *up, *down;
   item *top;
@@ -234,7 +106,7 @@ public:
 
   /// Constructor creating an option covering the columns indexed using the
   /// given initializer list set.
-  option(std::size_t index, std::vector<item> &items,
+  option(std::size_t index, linked_list<item> &items,
          std::initializer_list<std::size_t> set);
 
   /// Hides/unhides this option from the candidate solution set.
@@ -313,7 +185,7 @@ public:
   /// @}
 
   /// Iterable over all options covering this item.
-  auto covering_options() noexcept -> linked_list<node> & { return options; }
+  auto covering_options() noexcept -> list_view<node> & { return options; }
 
   /// Accessors to shrink or grow the size of the linked list of options.
   /// @{
@@ -322,9 +194,9 @@ public:
   /// @}
 
 private:
-  linked_list<node> options;
-  std::size_t size;
   item *left, *right;
+  list_view<node> options;
+  std::size_t size;
 };
 
 //===-- exact cover -------------------------------------------------------===//
@@ -359,10 +231,7 @@ private:
   /// Adds a new item that must be covered.
   void add_item();
 
-  /// The root item is used to determine if all items have been covered.
-  linked_list<item> remaining_items;
-
-  std::vector<item> items = {};
+  linked_list<item> items = {};
   std::vector<option> options = {};
   std::vector<option *> current_subset = {};
   std::vector<std::vector<option *>> solutions_found = {};
