@@ -208,9 +208,9 @@ private:
 class dancing_links {
 public:
   /// Constructs an exact cover problem with a given number of items.
-  dancing_links(
+  dancing_links::dancing_links(
       std::size_t n_items,
-      std::initializer_list<std::initializer_list<std::size_t>> options);
+      std::initializer_list<std::initializer_list<std::size_t>> sets);
 
   /// Searches the set of options for all subsets exactly covering all items.
   auto solve() -> std::vector<std::vector<std::size_t>>;

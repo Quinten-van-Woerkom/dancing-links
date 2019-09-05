@@ -216,7 +216,7 @@ auto dancing_links::quicksolve() -> std::vector<std::size_t> {
   auto &item = next_candidate();
 
   if (!item.satisfiable()) { // Current subset is invalid
-    return current_subset;
+    return {};
   }
 
   for (auto &node : item.covering_options()) {
@@ -229,6 +229,7 @@ auto dancing_links::quicksolve() -> std::vector<std::size_t> {
     option.uncover();
     current_subset.pop_back();
   }
+  return {};
 }
 
 /// Returns true if the current subset of options covers all items.
