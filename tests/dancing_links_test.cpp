@@ -29,6 +29,8 @@
 
 #include "../include/dancing_links.h"
 
+#include <algorithm>
+
 using namespace dlx;
 
 TEST_CASE("Catch works", "[catch]") {
@@ -44,27 +46,18 @@ TEST_CASE("A linked list containing only the root behaves as an empty list",
 }
 
 TEST_CASE("Can traverse an item's linked list of covering options", "[item]") {
-  item item{};
-  option owner{42};
-  owner.add_item(item);
+  linked_list<item> item{1};
+  option owner{42, item, {{0}}};
 
-  for (auto &node : item.covering_options()) {
-    REQUIRE(node.parent_option().get_index() == 42);
-  }
-
-  REQUIRE(item.count() == 1);
+  REQUIRE(item.size() == 1);
 }
 
 TEST_CASE("A node can remove itself reversibly from a linked list", "[node]") {
   item dummy_owner{};
   option dummy_option{2};
-  /*std::vector<node> nodes{{nullptr, nullptr, dummy_owner, dummy_option},
-                          {nullptr, nullptr, dummy_owner, dummy_option}};
-
-  list_view<node> list{nodes};*/
   linked_list<node> list;
-  list.emplace_back(nullptr, nullptr, dummy_owner, dummy_option);
-  list.emplace_back(nullptr, nullptr, dummy_owner, dummy_option);
+  list.emplace_back(dummy_owner, dummy_option);
+  list.emplace_back(dummy_owner, dummy_option);
 
   REQUIRE(list.size() == 2);
 
@@ -77,4 +70,38 @@ TEST_CASE("A node can remove itself reversibly from a linked list", "[node]") {
   list[0].reinsert();
   list[1].reinsert();
   REQUIRE(list.size() == 2);
+}
+
+TEST_CASE("Dancing links solver correctly identifies solutions",
+    "[dancing-links]") {
+  auto problem = dancing_links(4, {{1, 2}, {0}, {0, 3}, {3}});
+  auto solutions = problem.solve();
+
+  REQUIRE(solutions.size() == 2);
+  REQUIRE(std::find(solutions.begin(), solutions.end(),
+                    std::vector<std::size_t>{0, 1, 3}) != solutions.end());
+}
+
+TEST_CASE("Dancing links solver correctly identifies absence of solutions",
+    "[dancing-links]") {
+  auto problem = dancing_links(4, {{0, 1, 2}, {2, 3}});
+  auto solutions = problem.solve();
+
+  REQUIRE(solutions.empty());
+}
+
+TEST_CASE("Dancing links solver can handle multiple identical options",
+          "[dancing-links]") {
+  auto problem = dancing_links(4, {{1, 2}, {0}, {0, 3}, {3}, {0}, {3}});
+  auto solutions = problem.solve();
+
+  REQUIRE(!solutions.empty());
+}
+
+TEST_CASE("Dancing links solver can handle empty option sets",
+          "[dancing-links]") {
+  auto problem = dancing_links(4, {});
+  auto solutions = problem.solve();
+
+  REQUIRE(solutions.empty());
 }

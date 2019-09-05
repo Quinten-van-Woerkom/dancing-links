@@ -185,19 +185,19 @@ dancing_links::dancing_links(
 /// <solutions>.
 auto dancing_links::solve() -> std::vector<std::vector<std::size_t>> {
   if (this->exact_cover()) {
-    solutions.push_back(current_subset);
+    solutions.emplace_back(current_subset);
     return solutions;
   }
 
   auto &item = next_candidate();
 
   if (!item.satisfiable()) { // Current subset is invalid
-    return solutions;
+    return {};
   }
 
   for (auto &node : item.covering_options()) {
     auto &option = node.parent_option();
-    current_subset.push_back(option.get_index());
+    current_subset.emplace_back(option.get_index());
     option.cover();
     solve();
     option.uncover();
@@ -235,9 +235,7 @@ auto dancing_links::quicksolve() -> std::vector<std::size_t> {
 /// Returns true if the current subset of options covers all items.
 /// Determines whether or not this is the case by testing if the linked list of
 /// items that remain to be covered is empty.
-auto dancing_links::exact_cover() const -> bool {
-  return items.empty();
-}
+auto dancing_links::exact_cover() const -> bool { return items.empty(); }
 
 /// Returns the next item to be covered.
 /// Current heuristic for determining this candidate is the one with
