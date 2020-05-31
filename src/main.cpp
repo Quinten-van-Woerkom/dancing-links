@@ -25,29 +25,8 @@
 ///
 //===----------------------------------------------------------------------===//
 
-#include <initializer_list>
 #include <iostream>
 
-#include "dancing_links.h"
-
-using namespace dlx;
-
-#include <array>
-
 int main() {
-  auto problem = dancing_links(4, {{1, 2}, {0}, {0, 3}, {3}});
-
-  auto solutions = problem.solve();
-  for (auto solution : solutions) {
-    for (auto& option : solution) {
-      std::cout << option << ", ";
-    }
-    std::cout << '\n';
-  }
-  /*auto solution = problem.solve();
-  for (auto &option : solution) {
-    std::cout << option << ", ";
-  }*/
-
   std::cout << "Hello, world!\n";
 }

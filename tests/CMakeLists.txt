@@ -1,5 +1,0 @@
-add_executable(dancing_links_test dancing_links_test.cpp ../src/dancing_links.cpp ${HEADER_LIST})
-target_include_directories(dancing_links_test PUBLIC ../include)
-target_include_directories(dancing_links_test PUBLIC ../extern)
-target_compile_features(dancing_links_test PUBLIC cxx_std_20)
-add_test(DancingLinksTest dancing_links_test)
